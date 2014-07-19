@@ -1,23 +1,32 @@
+#ifndef _PLAYER
+#define _PLAYER
+
+#ifdef WIN32
 #include <SDL.h>
+#elif __APPLE__
+#include <SDL2/SDL.h>
+#endif
+
+#include "GameObject.h"
 
 
-class Player
+typedef enum {
+    MovementStand,
+    MovementLeft,
+    MovementRight,
+} Movement;
+
+class Player : public GameObject
 {
 public:
-	static const int DOT_WIDTH = 20;
-	static const int DOT_HEIGHT = 20;
+	Player(int x, int y);
 
-	static const int DOT_VEL = 10;
+	bool handleEvent(SDL_Event& e);
 
-	Player();
+    void update();
+private:
+    Movement mDirection;
 
-	void handleEvent(SDL_Event& e);
-
-	void move();
-
-	void render(SDL_Renderer* gRenderer);
-
-
-	int mPosX, mPosY;
-	int mVelX, mVelY;
 };
+
+#endif /* _PLAYER */

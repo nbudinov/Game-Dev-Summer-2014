@@ -1,29 +1,26 @@
+#ifndef _PROJECTILE
+#define _PROJECTILE
+
+#ifdef WIN32
 #include <SDL.h>
+#elif __APPLE__
+#include <SDL2/SDL.h>
+#endif
 #include <string>
 
-class Projectile
+#include "GameObject.h"
+
+class LTexture;
+
+class Projectile : public GameObject
 {
 public:
-	static const int PROJ_WIDTH = 20;
-	static const int PROJ_HEIGHT = 20;
+//	void handleEvent(SDL_Event& e);
+    Projectile(int x, int y);
 
-	static const int PROJ_VEL = 10;
-
-	Projectile();
-	Projectile(int x);
-
-	void handleEvent(SDL_Event& e);
-
-	void move();
-
-	void render(SDL_Renderer* gRenderer);
-
-	int getPosY() {
-		return mPosY;
-	}
-
+	void update();
 private:
-	int mPosX, mPosY;
-	int mVelY;
-
+    const int VERTICAL_VELOCITY = 1;
 };
+
+#endif /*_PROJECTILE */
