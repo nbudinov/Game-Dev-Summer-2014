@@ -1,10 +1,12 @@
 #include "Ships.h"
 #include "GameObject.h"
+#include <ScreenConsts.h>
 
-
-Ships::Ships(int x, int y) : GameObject(x, y)
+Ships::Ships(int x, int y, int number) : GameObject(x, y)
 {
 	dead = false;
+	shooting = false;
+	shipNum = number;
 }
 
 void Ships::update()
@@ -17,10 +19,15 @@ void Ships::update()
 	{
 		mPosX += shipSpeed;
 	}
-
-	if(hitScreenEnd == true)
-	{
-		mPosY += 30;
+	if(mPosY < SCREEN_HEIGHT - 100) {
+		if(hitScreenEnd == true)
+		{
+			mPosY += 10;
+		}
 	}
 }
 
+void Ships::shoot()
+{
+	shooting = true;
+}

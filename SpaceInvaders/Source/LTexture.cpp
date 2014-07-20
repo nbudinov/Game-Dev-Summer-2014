@@ -127,7 +127,7 @@ void LTexture::render( int x, int y, SDL_Renderer* gRenderer)
 
 	//Set clip rendering dimensions
 	//if( clip != NULL ){
-//		renderQuad.w = clip->w;
+	//	renderQuad.w = clip->w;
 	//	renderQuad.h = clip->h;
 	//}
 

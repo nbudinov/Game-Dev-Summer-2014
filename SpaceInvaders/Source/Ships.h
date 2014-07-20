@@ -8,10 +8,13 @@ class Ships : public GameObject
 {
 public:
 	int dir;
+	int shipNum;
 	bool hitScreenEnd;
 	bool dead;
+	bool shooting;
 
-	Ships(int x, int y);
+
+	Ships(int x, int y, int number);
 
 	void update();
 

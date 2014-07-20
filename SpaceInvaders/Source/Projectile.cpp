@@ -13,3 +13,8 @@ void Projectile::update()
 {
     mPosY -= VERTICAL_VELOCITY;
 }
+
+void Projectile::move()
+{
+	mPosY += VERTICAL_VELOCITY;
+}

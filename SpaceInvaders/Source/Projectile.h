@@ -19,6 +19,9 @@ public:
     Projectile(int x, int y);
 
 	void update();
+
+	void move();
+
 private:
     static const int VERTICAL_VELOCITY = 1;
 };
