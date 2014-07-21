@@ -1,11 +1,11 @@
 #ifndef _PLAYER
 #define _PLAYER
 
-//#ifdef WIN32
+#ifdef _WIN32
 #include <SDL.h>
-//#elif __APPLE__
-//#include <SDL2/SDL.h>
-//#endif
+#elif __APPLE__
+#include <SDL2/SDL.h>
+#endif
 
 #include "GameObject.h"
 

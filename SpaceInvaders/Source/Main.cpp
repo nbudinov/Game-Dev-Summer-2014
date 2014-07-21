@@ -1,22 +1,22 @@
 #include <iostream>
-
-#include <SDL_ttf.h>
 #include "ScreenConsts.h"
 #include <GameObject.h>
 #include "Player.h"
 #include "Projectile.h" 
 #include "LTexture.h"
 #include "Ships.h"
-#include <SDL_ttf.h>
 
-//#ifdef WIN32
+
+#ifdef _WIN32
 #include <SDL.h>
 #include <SDL_image.h>
-TTF_Font* gFont = NULL;
-//#elif __APPLE__
-//#include <SDL2/SDL.h>
-//#include <SDL2_image/SDL_image.h>
-//#endif
+#include <SDL_ttf.h>
+
+#elif __APPLE__
+#include <SDL2/SDL.h>
+#include <SDL2_image/SDL_image.h>
+
+#endif
 #include <vector>
 #include <list>
 
@@ -25,6 +25,7 @@ using namespace std;
 SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 
+TTF_Font* gFont = NULL;
 LTexture gPlayerTexture;
 LTexture gProjTexture;
 LTexture gShipTexture;

@@ -1,11 +1,11 @@
 
-//#ifdef WIN32
+#ifdef _WIN32
     #include <SDL.h>
     #include <SDL_image.h>
-//#elif __APPLE__
-//    #include <SDL2/SDL.h>
-//    #include <SDL2_image/SDL_image.h>
-//#endif
+#elif __APPLE__
+    #include <SDL2/SDL.h>
+    #include <SDL2_image/SDL_image.h>
+#endif
 
 #include "Player.h"
 #include "GameObject.h"

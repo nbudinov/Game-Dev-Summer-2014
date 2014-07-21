@@ -1,11 +1,11 @@
 #ifndef _PROJECTILE
 #define _PROJECTILE
 
-//#ifdef WIN32
+#ifdef _WIN32
 #include <SDL.h>
-//#elif __APPLE__
-//#include <SDL2/SDL.h>
-//#endif
+#elif __APPLE__
+#include <SDL2/SDL.h>
+#endif
 #include <string>
 
 #include "GameObject.h"
