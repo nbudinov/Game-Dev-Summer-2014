@@ -19,6 +19,7 @@ typedef enum {
 class Player : public GameObject
 {
 public:
+	//bool alive;
 	Player(int x, int y);
 
 	bool handleEvent(SDL_Event& e);

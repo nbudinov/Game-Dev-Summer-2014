@@ -15,6 +15,8 @@ class LTexture;
 class Projectile : public GameObject
 {
 public:
+	//bool alive ;
+
 //	void handleEvent(SDL_Event& e);
     Projectile(int x, int y);
 

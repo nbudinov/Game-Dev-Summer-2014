@@ -7,7 +7,9 @@
 
 Projectile::Projectile(int x, int y)
     : GameObject(x, y)
-{}
+{
+	//alive = true;
+}
 
 void Projectile::update()
 {

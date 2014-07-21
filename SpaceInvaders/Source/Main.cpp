@@ -1,15 +1,18 @@
 #include <iostream>
 
+#include <SDL_ttf.h>
 #include "ScreenConsts.h"
 #include <GameObject.h>
 #include "Player.h"
 #include "Projectile.h" 
 #include "LTexture.h"
 #include "Ships.h"
+#include <SDL_ttf.h>
 
 //#ifdef WIN32
 #include <SDL.h>
 #include <SDL_image.h>
+TTF_Font* gFont = NULL;
 //#elif __APPLE__
 //#include <SDL2/SDL.h>
 //#include <SDL2_image/SDL_image.h>
@@ -25,6 +28,8 @@ SDL_Renderer* gRenderer = NULL;
 LTexture gPlayerTexture;
 LTexture gProjTexture;
 LTexture gShipTexture;
+LTexture gLoseScreen;
+LTexture gPlayerLifesTexture;
 
 bool init()
 {
@@ -67,6 +72,11 @@ bool init()
         return false;
     }
 
+		if( TTF_Init() == -1 ){
+					printf( "SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError() );
+					return false;
+				}
+
     return true;
 }
 
@@ -75,7 +85,23 @@ bool loadMedia()
 	//Loading success flag
 	bool success = true;
 
-	//Load dot texture
+	gFont = TTF_OpenFont( "images/lazy.ttf", 22 );
+	if( gFont == NULL )
+	{
+		printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() );
+		success = false;
+	}
+	else
+	{
+		//Render text
+		SDL_Color textColor = { 0xFF, 0xFF, 0 };
+		if( !gPlayerLifesTexture.loadFromRenderedText( " Lifes: ", textColor, gRenderer, gFont ) )
+		{
+			printf( "Failed to render text texture!\n" );
+			success = false;
+		}
+	}
+
 	if( !gPlayerTexture.loadFromFile( "images/player.bmp", gRenderer ) )
 	{
 		printf( "Failed to load dot texture!\n" );
@@ -93,6 +119,13 @@ bool loadMedia()
 		printf( "Failed to load dot texture!\n" );
 		success = false;
 	}
+
+	if( !gLoseScreen.loadFromFile( "images/losescreen.png", gRenderer ) )
+	{
+		printf( "Failed to load LoSE screen texture!\n" );
+		success = false;
+	}
+
 
 	return success;
 }
@@ -143,20 +176,21 @@ void shipFire()
 	{
 		for(vector<Ships*>::iterator itt = (*it).begin(); itt != (*it).end(); ++itt)
 		{
-			if( (*itt)->shipNum == randomShip)
-			{
-				addShipProj( (*itt)->mPosX, (*itt)->mPosY );
-				(*itt)->shooting = true;
+			if( (*itt)->alive == true ) {
+				if( (*itt)->shipNum == randomShip)
+				{
+					addShipProj( (*itt)->mPosX, (*itt)->mPosY );
+					(*itt)->shooting = true;
+				}
 			}
 		}
 	}
 }
 
-int xx = 100, yy = 50, number = 0;
+//int xx = 100, yy = 50, number = 0;
 
-void createArmy()
+void createArmy(int xx, int yy, int number)
 {
-
 	for(vector<vector<Ships*>>::iterator it =  ships.begin(); it != ships.end(); ++it )
 	{
 		for(vector<Ships*>::iterator itt = (*it).begin(); itt != (*it).end(); ++itt)
@@ -177,71 +211,37 @@ void createArmy()
 
 void movingShips(int direction, bool hitScreenEnd)
 {
+	vector<vector<Ships*>>::iterator iter =  ships.end()-1;
+	for(vector<Ships*>::iterator itterator = (*iter).begin(); itterator != (*iter).end(); ++itterator)
+	{
+		if( (*itterator)->mPosY == SCREEN_HEIGHT - 150 )
+			hitScreenEnd = false;
+	}
+
+
 	for(vector<vector<Ships*>>::iterator it =  ships.begin(); it != ships.end(); ++it )
 	{
 		for(vector<Ships*>::iterator itt = (*it).begin(); itt != (*it).end(); ++itt)
 		{
-			if( (*itt)->dead == false ) {
-				(*itt)->dir = direction;
-				(*itt)->hitScreenEnd = hitScreenEnd;
+			(*itt)->dir = direction;
+			(*itt)->hitScreenEnd = hitScreenEnd;
+			if( (*itt)->alive == true ) 
+			{
 				(*itt)->update();
 			}
 		}
 	}
 }
-/*
-int firstLeftAliveX()
-{
-	int firstLeftAliveX = -100;
-	while(firstLeftAliveX == -100)
-		for(vector<vector<Ships*>>::iterator it =  ships.begin(); it != ships.end(); ++it)
-		{
-			vector<Ships*>::iterator itt = (*it).begin(); 
-		
-			if( (*itt)->dead == false )
-			{
-				firstLeftAliveX = (*itt)->mPosX;
-				
-				cout << "first alive x " << firstLeftAliveX << endl;
-				//firstAliveY = (*itt)->mPosY;
-				return firstLeftAliveX;
-			}			
-			//break;
-		}
-
-	//return -1;
-}
-*/
-/*
-int firstRightAliveX()
-{
-	int firstRightAliveX;
-	for(vector<vector<Ships*>>::reverse_iterator it = ships.rbegin(); it != ships.rend(); ++it)
-	{
-		for(vector<Ships*>::reverse_iterator itt = (*it).rbegin(); itt != (*it).rend(); ++itt)
-		{
-			if( (*itt)->dead == false )
-			{
-				firstRightAliveX = (*itt)->mPosX;
-				//firstAliveY = (*itt)->mPosY;
-				return firstRightAliveX;
-			}			
-		}
-	}
-	//return -1;
-}
-*/
 
 bool ifScreenEndHit()
 {
-	int firstLeftAlive = 0, firstRightAlive = 0;
+	//int firstLeftAlive = 0, firstRightAlive = 0;
 	bool endHit = false;
 	
 	vector<vector<Ships*>>::iterator it = ships.begin();
 		for(vector<Ships*>::reverse_iterator itt = (*it).rbegin(); itt != (*it).rend(); ++itt)
 		{
 
-	//cout << "x1 " << firstLeftAliveX << "x2 " << firstRightAliveX << endl;
 	if( (*itt)->mPosX == 0 || (*itt)->mPosX == SCREEN_WIDTH - gShipTexture.getWidth() )
 	{
 		return true;			
@@ -256,10 +256,8 @@ bool ifShipHit(int projX, int projY, int shipX, int shipY)
 	if ( projX >= shipX  && 
 		(projX < (shipX + (gShipTexture.getWidth()) ) )  && 
 		(projY > shipY  ) && 
-		(projY < (shipY + (gShipTexture.getHeight()) ) ) ){
-		//cout << " COLIDNA \n";
-	//cout << " px " << projX << " py " << projY << " sx " << shipX << " sy " << shipY << endl; 
-	//cout << gShipTexture.getWidth() << " /   " << gShipTexture.getHeight() << endl;
+		(projY < (shipY + (gShipTexture.getHeight()) ) ) )
+	{
 	return true;
 	}
 	else 
@@ -268,18 +266,26 @@ bool ifShipHit(int projX, int projY, int shipX, int shipY)
 
 
 void ifProjCollShip()
-{
+{	
 	for(list<Projectile*>::iterator projIt = Projects.begin(); projIt != Projects.end(); ++projIt) 
-	{
-		for(vector<vector<Ships*>>::iterator it =  ships.begin(); it != ships.end(); ++it )
+	{	
+		if( (*projIt)->alive == true ) 
 		{
-			for(vector<Ships*>::iterator itt = (*it).begin(); itt != (*it).end(); ++itt)
+			for(vector<vector<Ships*>>::iterator it =  ships.begin(); it != ships.end(); ++it )
 			{
-				if( ifShipHit( (*projIt)->getPosX(), (*projIt)->getPosY(), (*itt)->getPosX(), (*itt)->getPosY()) == true) {
-					(*itt)->dead = true;
-					//delete (*itt);
-					//delete (*projIt);									<======
-					//Projects.resize(Projects.size()-1);
+				for(vector<Ships*>::iterator itt = (*it).begin(); itt != (*it).end(); ++itt)
+				{	
+					if( (*itt)->alive == true )
+					{
+						if( ifShipHit( (*projIt)->mPosX, (*projIt)->mPosY, (*itt)->mPosX, (*itt)->mPosY) == true) 
+						{
+							(*itt)->alive = false;
+							(*projIt)->alive = false;
+							//delete (*projIt);
+							//Projects.resize(Projects.size()-1);
+							//delete (*projIt);							
+						}
+					}
 				}
 			}
 		}
@@ -297,7 +303,6 @@ bool ifHitPlayer(int playerX, int playerY, int shipProjX, int shipProjY)
 		return true;
 	}
 	else {
-		//cout << "vurna FALSE \n";
 		return false;
 	}
 }
@@ -309,35 +314,43 @@ void projCollPlayer(Player player, int &playerLifes)
 		{
 			if (ifHitPlayer(player.mPosX, player.mPosY, (*projIt)->mPosX, (*projIt)->mPosY ) ) {
 				playerLifes -= 1;
-				cout << " DIEEEE " ;
-				//delete *projIt;						<====
+				(*projIt)->alive = false;
+				delete (*projIt);
+			}
+			else if( (*projIt)->mPosY > SCREEN_HEIGHT ) 
+			{
+				(*projIt)->alive = false;
+				//delete (*projIt);
 			}
 		}
 	}
 }
 
-/*void deleteDeadShips()
+void deleteShips()
 {
 	for(vector<vector<Ships*>>::iterator it =  ships.begin(); it != ships.end(); ++it )
 	{
 		for(vector<Ships*>::iterator itt = (*it).begin(); itt != (*it).end(); ++itt)
 		{
-			if( (*itt)->dead == true )
+			//if( (*itt)->dead == true )
+				(*itt)->alive = false;
 				delete (*itt);
 		}
 	}
 	
 }
-*/
+
 int main( int argc, char* args[])
  {
-	
+	SDL_Color textColor = { 255, 255, 200, 255 };
 //	 int i = 0;
 	int timer = 0;
 	int direction = 1;   //  1 : left moving / 2 : right
 	bool screenHit = false;
 
 	int PlayerLifes = 3;
+
+	std::stringstream PlayerLifesText;
 
 	if( !init() )
 	{
@@ -359,9 +372,8 @@ int main( int argc, char* args[])
             player.setTex(&gPlayerTexture);
             gameObjects.push_back(&player);
         
-			createArmy();
+			createArmy(100, 50, 0);
 
-			
 			while( !quit )
 			{
 				while( SDL_PollEvent( &e ) != 0 )
@@ -370,15 +382,37 @@ int main( int argc, char* args[])
 					{
 						quit = true;
 					}
+					//if(e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_n) 
+					//{
+					//	PlayerLifes = 1;
+					//	deleteShips();
+					//	createArmy(100, 50, 0);
+					//}
 					bool shouldShoot = player.handleEvent( e );
                     if (shouldShoot)
                         addProj(player);
+					
 				}
-                
-              
-				
-				timer += 1;     
-				if( timer % 2 == 0) 
+           
+			if(PlayerLifes <= 0) {
+				SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0x00 );
+				SDL_RenderClear( gRenderer );
+
+				gLoseScreen.render(0, 0, gRenderer);
+
+			}
+			else 
+			{
+				PlayerLifesText.str("");
+				PlayerLifesText << "Lifes " << PlayerLifes;
+
+				gPlayerLifesTexture.loadFromRenderedText( PlayerLifesText.str().c_str(), textColor, gRenderer, gFont  ); 
+
+				if( timer > 100 )
+					timer = 0;
+				timer += 1; 
+
+				if( timer % 3 == 0) 
 				{
 					if(ifScreenEndHit()) {
 						screenHit = true;
@@ -395,58 +429,64 @@ int main( int argc, char* args[])
 					shipFire();
 				}
 
-				if( timer > 100 )
-					timer = 0;
-
 				ifProjCollShip();
 				projCollPlayer(player, PlayerLifes);
 				
 				//cout << PlayerLifes << endl;
 
 				  for(std::list<GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end();)
-                {
-                    (*it)->update();
-                    ++it;
-                }
+				  {
+					if( (*it)->alive == true ) 
+						(*it)->update();
+					    ++it;
+					
+				  }
 
 				for(vector<Projectile*>::iterator it = shipProjects.begin(); it != shipProjects.end(); ++it)
 				{
-					(*it)->move();
+					if( (*it)->alive == true)
+						(*it)->move();
 				}
 
                 // RENDERING
-				SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
+				SDL_SetRenderDrawColor( gRenderer, 0x00, 0x00, 0x00, 0x00 );
 				SDL_RenderClear( gRenderer );
 
 				for(vector<Projectile*>::iterator it = shipProjects.begin(); it != shipProjects.end(); ++it)
 				{
-					(*it)->render(gRenderer);
+						if( (*it)->alive == true)
+							(*it)->render(gRenderer);
 				}
 	                
                 for(std::list<GameObject*>::iterator it = gameObjects.begin(); it != gameObjects.end();)
                 {
-                    (*it)->render(gRenderer);
+					if ((*it)->alive == true ) 
+					    (*it)->render(gRenderer);
                     ++it;
+					
                 }
 				
 				for(vector<vector<Ships*>>::iterator it =  ships.begin(); it != ships.end(); ++it )
 				{
 					for(vector<Ships*>::iterator itt = (*it).begin(); itt != (*it).end(); ++itt)
 					{
-						if( (*itt)->dead == false )
+						if( (*itt)->alive == true )
 							(*itt)->render(gRenderer);
 
 					}
 				}
+			}
+
+			gPlayerLifesTexture.render(5, 5, gRenderer);
 
 				SDL_RenderPresent( gRenderer );
-				//deleteDeadShips();
+				//deleteDeadShips(); m
 
 			}
 		}
 	
 	}
 	close();
-
+	//system("pause");
 	return 0;
 }

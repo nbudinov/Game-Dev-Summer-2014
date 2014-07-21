@@ -5,11 +5,12 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
-
+#include <SDL_ttf.h>
 #include <stdio.h>
 #include <string>
 #include <cmath>
 #include <sstream>
+
 class LTexture
 {
 	public:
@@ -20,7 +21,7 @@ class LTexture
 		bool loadFromFile( std::string path, SDL_Renderer* gRenderer = NULL );
 		
 		#ifdef _SDL_TTF_H 
-		bool loadFromRenderedText( std::string textureText, SDL_Color textColor );
+		bool loadFromRenderedText( std::string textureText, SDL_Color textColor, SDL_Renderer* gRenderer, TTF_Font* gFont );
 		#endif
 
 		void free();

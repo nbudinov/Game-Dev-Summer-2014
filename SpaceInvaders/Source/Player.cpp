@@ -18,6 +18,7 @@ Player::Player(int x, int y)
     : GameObject(x , y)
 {
     mDirection = MovementStand;
+	//alive = true;
 }
 
 bool Player::handleEvent( SDL_Event& e )

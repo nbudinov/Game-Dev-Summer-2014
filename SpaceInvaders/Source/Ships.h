@@ -10,10 +10,8 @@ public:
 	int dir;
 	int shipNum;
 	bool hitScreenEnd;
-	bool dead;
 	bool shooting;
-
-
+	
 	Ships(int x, int y, int number);
 
 	void update();

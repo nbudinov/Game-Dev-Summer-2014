@@ -7,6 +7,8 @@ class LTexture;
 
 class GameObject {
 public:
+	bool alive;
+
     GameObject(int x, int y);
     
     int getPosY();

@@ -5,6 +5,7 @@ GameObject::GameObject(int x, int y)
 {
     mPosY = y;
     mPosX = x;
+	alive = true;
 }
 
 int GameObject::getPosY()

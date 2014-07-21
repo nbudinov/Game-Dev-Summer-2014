@@ -4,7 +4,6 @@
 
 Ships::Ships(int x, int y, int number) : GameObject(x, y)
 {
-	dead = false;
 	shooting = false;
 	shipNum = number;
 }
@@ -19,12 +18,12 @@ void Ships::update()
 	{
 		mPosX += shipSpeed;
 	}
-	if(mPosY < SCREEN_HEIGHT - 100) {
+	//if(mPosY < SCREEN_HEIGHT - 100) {
 		if(hitScreenEnd == true)
 		{
 			mPosY += 10;
 		}
-	}
+	//}
 }
 
 void Ships::shoot()
