@@ -1,0 +1,19 @@
+int SCREEN_WIDTH = 960;
+int SCREEN_HEIGHT = 700;
+
+int LEVEL_WIDTH = 960;
+int LEVEL_HEIGHT = 700;
+
+int TILE_WIDTH = 32;
+int TILE_HEIGHT = 32;
+int TILE_SIZE = 32;
+
+int TOTAL_TILES = 690;
+
+int PLAYER_SPEED = 7;
+
+int GRAVITY = 5;
+
+int JUMP_VEL = 7;
+
+const int WALKING_ANIMATION_FRAMES = 4;
