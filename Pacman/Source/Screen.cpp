@@ -64,12 +64,12 @@ bool Screen::init()
 
 bool Screen::loadMedia()
 {
-	if( !wallTexture.loadFromFile( "Data/wall.png", gRenderer ) )
+	if( !wallTexture.loadFromFile( "Data/Art/wall.png", gRenderer ) )
 	{
 		printf(" failed to load wall \n ");
 	}
 
-	if( !emptyTexture.loadFromFile( "Data/empty.png", gRenderer ) )
+	if( !emptyTexture.loadFromFile( "Data/Art/empty.png", gRenderer ) )
 	{
 		printf(" failed to load empty \n ");
 	}
@@ -94,7 +94,7 @@ bool Screen::setTiles(Tile* tiles[])
 {
 	int x = 0, y = 0;
 
-    std::ifstream map( "Data/map.txt" );
+    std::ifstream map( "Data/Levels/map.txt" );
 
     if( map == NULL )
     {
