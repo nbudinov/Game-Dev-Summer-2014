@@ -19,7 +19,6 @@ bool loadPlayerTex()
 	return true;
 }
 
-
 int main(int argc, char *argv[])
 {
 	Game game;
@@ -79,15 +78,10 @@ int main(int argc, char *argv[])
 			player.playerBox.y -= PLAYER_SPEED;
 		}
 
-
-
-
-
-
 			SDL_SetRenderDrawColor( scr.getRenderer(), 0xFF, 0x00, 0x00, 0x00 );
 			SDL_RenderClear( scr.getRenderer() );
 			
-			// RENDERING
+		// RENDERING
 			for(int i = 0; i < 400; i++) {
 				//printf( "%d = %d \n ", i, tiles[i]->getType());
 				tiles[i]->show(scr.getRenderer());

@@ -16,7 +16,9 @@ class Player
 public:
 	LTexture* playerTex;
 	SDL_Rect playerBox;
-    Movement mDirection;
+    Movement CurrentDirection;
+	Movement NewDirection;
+
 	float velX, velY;
 
 	Player(int x, int y);

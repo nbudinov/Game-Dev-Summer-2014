@@ -81,7 +81,6 @@ bool Screen::loadMedia()
 
 
 	return true;
-
 }
 
 //bool setPlayerTex( Player pl )

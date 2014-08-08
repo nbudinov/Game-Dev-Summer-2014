@@ -13,7 +13,7 @@ Player::Player(int x, int y)
 	playerBox.w = TILE_WIDTH;
 	playerBox.h = TILE_HEIGHT;
 
-    mDirection = MovementStand;
+    CurrentDirection = MovementStand;
 
 	//playerTex.loadFromFile( "images/player.png",  )
 }
@@ -25,16 +25,16 @@ bool Player::handleEvent( SDL_Event& e )
          switch( e.key.keysym.sym )
          {
              case SDLK_LEFT:
-					mDirection = MovementLeft;
+					CurrentDirection = MovementLeft;
 					break;
 				case SDLK_RIGHT:
-					mDirection = MovementRight;
+					CurrentDirection = MovementRight;
 					break;
 				case SDLK_UP:
-					mDirection = MovementUp;
+					CurrentDirection = MovementUp;
 					break;
 				case SDLK_DOWN:
-					mDirection = MovementDown;
+					CurrentDirection = MovementDown;
 					break;
 				default:
 					break;
@@ -45,13 +45,13 @@ bool Player::handleEvent( SDL_Event& e )
         switch( e.key.keysym.sym )
         {
             case SDLK_LEFT:
-                if (mDirection == MovementLeft) 
-                    mDirection = MovementStand;
+                if (CurrentDirection == MovementLeft) 
+                    CurrentDirection = MovementStand;
 				//velX += 3;
                 break;
             case SDLK_RIGHT:
-                if (mDirection == MovementRight)
-                     mDirection = MovementStand;
+                if (CurrentDirection == MovementRight)
+                     CurrentDirection = MovementStand;
 				velX -= 3;
                 break;
 	        default:
@@ -65,7 +65,7 @@ bool Player::handleEvent( SDL_Event& e )
 
 void Player::update()
 {
-	   switch (mDirection) {
+	   switch (CurrentDirection) {
 			case MovementLeft:
 				playerBox.x -= PLAYER_SPEED;
 				break;
@@ -86,9 +86,6 @@ void Player::update()
 
 		//playerBox.x += velX;
 		//playerBox.y += velY;
-
-
-
 }
 
 void Player::render(SDL_Renderer* gRenderer)

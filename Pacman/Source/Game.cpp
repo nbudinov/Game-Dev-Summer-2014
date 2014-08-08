@@ -1,4 +1,4 @@
-#include "Game.h"
+ #include "Game.h"
 #include "Player.h"
 #include "Tile.h"
 
@@ -10,7 +10,7 @@ bool Game::checkCollision( SDL_Rect A, SDL_Rect B )
     int bottomA, bottomB;
 
     leftA = A.x;
-    rightA = A.x + A.w;
+    rightA = A.x + A.w; 
     topA = A.y;
     bottomA = A.y + A.h;
 
@@ -49,7 +49,7 @@ int Game::Collision( Player player, Tile* tiles[] )
 		{
 			if( tiles[t]->getType() == 1 )
 			{
-				switch(player.mDirection)
+				switch(player.CurrentDirection)
 				{
 				case MovementLeft:
 					//player.playerBox.x += PLAYER_SPEED;
