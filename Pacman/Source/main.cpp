@@ -15,7 +15,7 @@ LTexture playerTexture;
 
 bool loadPlayerTex()
 {
-	playerTexture.loadFromFile( "images/player.png", scr.getRenderer() );
+	playerTexture.loadFromFile( "Data/Art/player.png", scr.getRenderer() );
 
 	return true;
 }
