@@ -9,7 +9,6 @@
 #include "Game.h"
 
 Screen scr;
-Game game;
 
 LTexture playerTexture;
 
@@ -23,6 +22,8 @@ bool loadPlayerTex()
 
 int main(int argc, char *argv[])
 {
+	Game game;
+
 	Tile *tiles[400];
 
 	scr.init();
