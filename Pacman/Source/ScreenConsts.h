@@ -10,4 +10,6 @@ extern int TILE_HEIGHT;
 
 extern const int TOTAL_TILES;
 
+extern int PLAYER_SPEED;
+
 #endif /* _SCREENCONSTS_ */

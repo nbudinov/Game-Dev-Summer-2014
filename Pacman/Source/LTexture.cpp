@@ -14,7 +14,7 @@ LTexture::~LTexture()
 }
 
 
-	bool LTexture::loadFromFile( std::string path,  SDL_Renderer* gRenderer )
+bool LTexture::loadFromFile( std::string path,  SDL_Renderer* gRenderer )
 {
 	free();
 

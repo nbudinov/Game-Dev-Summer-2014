@@ -3,11 +3,12 @@
 #include "ScreenConsts.h"
 #include "LTexture.h"
 #include "Tile.h"
+#include "Player.h"
 #include <fstream>
 
 	LTexture wallTexture;
 	LTexture emptyTexture;
-
+	//LTexture playerTexture;
 
 Screen::Screen()
 {
@@ -35,12 +36,6 @@ bool Screen::init()
     {
         return false;
     }
-
-	//if( SDL_Init( SDL_INIT_VIDEO ) < 0 )
-	//{
-	//	printf( "SDL could not initialize! SDL Error: %s\n", SDL_GetError() );
-    //    return false;
-	//}
 
     if( !SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" ) )
     {
@@ -79,9 +74,21 @@ bool Screen::loadMedia()
 		printf(" failed to load empty \n ");
 	}
 
+	//if( !playerTexture.loadFromFile( "images/player.png", gRenderer ) )
+	//{
+	//	printf(" failed to load player Texture \n ");
+	//}
+
+
 	return true;
 
 }
+
+//bool setPlayerTex( Player pl )
+//{
+//	pl.setPlayerTex( &playerTexture );
+//	return true;
+//}
 
 bool Screen::setTiles(Tile* tiles[])
 {
@@ -108,7 +115,7 @@ bool Screen::setTiles(Tile* tiles[])
 			    return false;
 			}
 
-			if(tileType > 0 || tileType < 3) {
+			if(tileType >= 0 || tileType < 3) {
 				tiles[t] = new Tile( x, y, tileType );
 				//printf("x = %d   y = %d   type = %d \n", x, y, tiles[t]->getType());
 				if(	tiles[t]->getType() == 0 ) 

@@ -3,6 +3,7 @@
 
 class Tile;
 class LTexture;
+class Player;
 
 class Screen
 {
@@ -17,6 +18,8 @@ public:
 	bool loadMedia();
 
 	bool setTiles( Tile* tiles[] );
+
+	bool setPlayerTex(Player player);
 
 	SDL_Renderer* getRenderer();
 
