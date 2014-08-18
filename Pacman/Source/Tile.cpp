@@ -10,11 +10,13 @@ Tile::Tile(int x, int y, int tileType)
 	box.w = TILE_WIDTH;
 
 	type = tileType;
+
+	dead = false;
 }
 
 void Tile::show(SDL_Renderer* gRenderer)
 {
-	tileTex->render(box.x, box.y, gRenderer);	
+	tileTex->render(box.x, box.y, gRenderer, SDL_FLIP_NONE , 32, 32);	
 }
 
 int Tile::getType() 

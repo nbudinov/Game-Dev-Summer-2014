@@ -1,4 +1,4 @@
-
+#pragma once
 
 //#ifndef _LTEXTURE
 //#define _LTEXTURE
@@ -7,12 +7,11 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
-//#include <SDL_ttf.h>
+#include <SDL_ttf.h>
 
 #elif __APPLE__
 #include <SDL2/SDL.h>
 #include <SDL2_image/SDL_image.h>
-
 #endif
 
 
@@ -30,9 +29,7 @@ class LTexture
 
 		bool loadFromFile( std::string path, SDL_Renderer* gRenderer  );
 		
-		#ifdef _SDL_TTF_H 
 		bool loadFromRenderedText( std::string textureText, SDL_Color textColor, SDL_Renderer* gRenderer, TTF_Font* gFont );
-		#endif
 
 		void free();
 
@@ -42,7 +39,7 @@ class LTexture
 
 		//void setAlpha( Uint8 alpha );
 		
-		void render( int x, int y, SDL_Renderer* gRenderer);
+		void render( int x, int y, SDL_Renderer* gRenderer, SDL_RendererFlip flip, int w = 32, int h = 32);
 
 		void NewRender( int x, int y, SDL_Rect* clip, SDL_Renderer* gRenderer );
 

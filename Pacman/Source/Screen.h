@@ -1,6 +1,8 @@
 #include <SDL.h>
 #include <stdio.h>
 
+#include <SDL_ttf.h>
+
 class Tile;
 class LTexture;
 class Player;
@@ -26,5 +28,6 @@ public:
 private:
 	SDL_Window* gWindow;
 	SDL_Renderer* gRenderer;
+
 
 };

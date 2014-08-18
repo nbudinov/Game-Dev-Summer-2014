@@ -68,19 +68,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="LMenu.cpp" />
     <ClCompile Include="LTexture.cpp" />
+    <ClCompile Include="LTimer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="ScreenConsts.cpp" />
+    <ClCompile Include="SoundEffects.cpp" />
     <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="LMenu.h" />
     <ClInclude Include="LTexture.h" />
+    <ClInclude Include="LTimer.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="ScreenConsts.h" />
+    <ClInclude Include="SoundEffects.h" />
     <ClInclude Include="Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

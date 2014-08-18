@@ -18,6 +18,8 @@ public:
 
 	SDL_Rect getBox();
 
+	bool dead;
+
 private:
 	SDL_Rect box;
 	int type;

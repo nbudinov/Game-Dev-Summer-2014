@@ -27,10 +27,8 @@ bool LTexture::loadFromFile( std::string path,  SDL_Renderer* gRenderer )
 	}
 	else
 	{
-		//Color key image
-		SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0, 0xFF, 0xFF ) );
+		SDL_SetColorKey( loadedSurface, SDL_TRUE, SDL_MapRGB( loadedSurface->format, 0x00, 0x00, 0x00 ) );
 
-		//Create texture from surface pixels
         newTexture = SDL_CreateTextureFromSurface( gRenderer, loadedSurface );
 		if( newTexture == NULL )
 		{
@@ -38,21 +36,17 @@ bool LTexture::loadFromFile( std::string path,  SDL_Renderer* gRenderer )
 		}
 		else
 		{
-			//Get image dimensions
 			mWidth = loadedSurface->w;
 			mHeight = loadedSurface->h;
 		}
 
-		//Get rid of old loaded surface
 		SDL_FreeSurface( loadedSurface );
 	}
 
-	//Return success
 	mTexture = newTexture;
 	return mTexture != NULL;
 }
 
-#ifdef _SDL_TTF_H
 bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColor, SDL_Renderer* gRenderer, TTF_Font* gFont  )
 {
 	//Get rid of preexisting texture
@@ -87,7 +81,6 @@ bool LTexture::loadFromRenderedText( std::string textureText, SDL_Color textColo
 	//Return success
 	return mTexture != NULL;
 }
-#endif
 
 void LTexture::free()
 {
@@ -118,11 +111,11 @@ void LTexture::free()
 
 
 
-void LTexture::render( int x, int y, SDL_Renderer* gRenderer)
+void LTexture::render( int x, int y, SDL_Renderer* gRenderer, SDL_RendererFlip flip, int w, int h)
 {
-	SDL_Rect renderQuad = {x, y, mWidth, mHeight };
+	SDL_Rect renderQuad = {x, y, w, h };
 
-	SDL_RenderCopy( gRenderer, mTexture, NULL, &renderQuad);
+	SDL_RenderCopyEx( gRenderer, mTexture, NULL, &renderQuad, 0.0, NULL, flip);
 }
 
 void LTexture::NewRender( int x, int y, SDL_Rect* clip, SDL_Renderer* gRenderer )

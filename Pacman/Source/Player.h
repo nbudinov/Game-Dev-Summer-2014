@@ -21,13 +21,15 @@ public:
 
 	float velX, velY;
 
+	int directionX, directionY, turnDir;
+
 	Player(int x, int y);
 
 	bool handleEvent(SDL_Event& e);
 
     void update();
 
-	void render(SDL_Renderer* gRenderer = NULL);
+	void render(SDL_Renderer* gRenderer, SDL_RendererFlip flip, int w, int h);
 
 	int getPlayerX();
 
@@ -39,7 +41,7 @@ public:
 
 	SDL_Rect getPlayerBox();
 
+	int score;
 
-private:
 
 };

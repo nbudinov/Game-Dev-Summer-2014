@@ -1,6 +1,7 @@
  #include "Game.h"
 #include "Player.h"
 #include "Tile.h"
+#include <stdio.h>
 
 bool Game::checkCollision( SDL_Rect A, SDL_Rect B )
 {

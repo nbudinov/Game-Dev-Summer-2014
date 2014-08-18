@@ -56,6 +56,7 @@ bool Screen::init()
         return false;
     }
 
+
     SDL_SetRenderDrawColor( gRenderer, 0xFF, 0xFF, 0xFF, 0xFF );
 
     return true;
