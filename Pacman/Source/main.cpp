@@ -4,17 +4,19 @@
 #include <vector>
 
 #include "ScreenConsts.h"
-#include "Screen.h" 
+//#include "screen.h" 
 #include "Tile.h"
 #include "Player.h"
 #include "LTexture.h"
 #include "Game.h"
 #include "LTimer.h"
 #include "LMenu.h"
+#include "Mobs.h"
 
 #undef main
 
-Screen scr;
+//gameeen game;
+Game game;
 
 LTexture playerTextures[4];
 
@@ -22,30 +24,30 @@ LTexture scoreTex;
 
 bool loadPlayerTex()
 {
-	playerTextures[0].loadFromFile( "Data/Art/player.png", scr.getRenderer() );
-	playerTextures[1].loadFromFile( "Data/Art/PlayerShutHor.png", scr.getRenderer() );
-	playerTextures[2].loadFromFile( "Data/Art/PlayerVert.png", scr.getRenderer() );
-	playerTextures[3].loadFromFile( "Data/Art/PlayerShutVert.png", scr.getRenderer() );
+	playerTextures[0].loadFromFile( "Data/Art/player.png", game.getRenderer() );
+	playerTextures[1].loadFromFile( "Data/Art/PlayerShutHor.png", game.getRenderer() );
+	playerTextures[2].loadFromFile( "Data/Art/PlayerVert.png", game.getRenderer() );
+	playerTextures[3].loadFromFile( "Data/Art/PlayerShutVert.png", game.getRenderer() );
 
 	return true;
 }
 
 int main(int argc, char *argv[])
 {
-	Game game;
 
 	Tile *tiles[400];
-
+	Mobs *ghosts[4];
 	std::vector<Tile> coins;
 
-	scr.init();
+	game.init();
 
-	scr.loadMedia();
+	game.loadMedia();
 
 	loadPlayerTex();
 
+	game.loadGhosts(ghosts);
 
-	if(	scr.setTiles(tiles) == false) {
+	if(	game.setTiles(tiles) == false) {
 		printf("set tiles err \n");	
 		return -1;
 	}
@@ -57,7 +59,7 @@ int main(int argc, char *argv[])
 	}
 	
 	LTexture coinTex;
-	coinTex.loadFromFile( "Data/Art/coin.png", scr.getRenderer() );
+	coinTex.loadFromFile( "Data/Art/coin.png", game.getRenderer() );
 	for(int i = 0; i < coins.size(); ++i)
 	{
 		coins[i].tileTex = &coinTex;
@@ -65,7 +67,7 @@ int main(int argc, char *argv[])
 
 	bool quit = false;
 
-	LMenu menu( scr.getRenderer() );
+	LMenu menu( game.getRenderer() );
 	menu.run();
 	if(menu.isFinished() == 1)
 		quit = true;
@@ -74,7 +76,7 @@ int main(int argc, char *argv[])
 	
 	player.CurrentDirection = MovementRight;
 
-	//scr.setPlayerTex(player);
+	//game.setPlayerTex(player);
 
 	LTimer fpsTimer;
 	LTimer capTimer;
@@ -83,8 +85,8 @@ int main(int argc, char *argv[])
 	int anim = 0;
 	fpsTimer.start();
 
-	const int SCREEN_FPS = 60;
-	const int SCREEN_TICK_PER_FRAME = 1000 / SCREEN_FPS;
+	const int gameEEN_FPS = 60;
+	const int gameEEN_TICK_PER_FRAME = 1000 / gameEEN_FPS;
 
 	SDL_Event e;
 
@@ -106,6 +108,10 @@ int main(int argc, char *argv[])
 		//printf("%d, %d, %d, %d \n", leftCorn.x, leftCorn.y, leftCorn.w, leftCorn.h);
 
 		//printf(" %d \n", player.CurrentDirection);
+
+		game.GhostsAI(player, ghosts, tiles);
+
+		game.GhostsCollision(ghosts, tiles);
 
 		player.update();
 
@@ -195,7 +201,7 @@ int main(int argc, char *argv[])
 			if(game.checkCollision(player.getPlayerBox(), coins[i].getBox()) && !coins[i].dead)
 			{
 				LTexture emptyTex;
-				emptyTex.loadFromFile( "Data/Art/empty.png", scr.getRenderer() );
+				emptyTex.loadFromFile( "Data/Art/empty.png", game.getRenderer() );
 				coins[i].tileTex = &emptyTex;
 				coins[i].dead = true;
 				player.score += 10;
@@ -226,10 +232,10 @@ int main(int argc, char *argv[])
 			{
 				pScoreStr.push_back(pScore[i]);
 			}
-			scoreTex.loadFromRenderedText("SCORE :  " + pScoreStr, textColor, scr.getRenderer(), menu.font);
+			scoreTex.loadFromRenderedText("SCORE :  " + pScoreStr, textColor, game.getRenderer(), menu.font);
 
-			SDL_SetRenderDrawColor( scr.getRenderer(), 0x00, 0x00, 0x00, 0x00 );
-			SDL_RenderClear( scr.getRenderer() );
+			SDL_SetRenderDrawColor( game.getRenderer(), 0x00, 0x00, 0x00, 0x00 );
+			SDL_RenderClear( game.getRenderer() );
 			
 
 
@@ -239,13 +245,19 @@ int main(int argc, char *argv[])
 
 			for(int i = 0; i < 400; i++) {
 				//printf( "%d = %d \n ", i, tiles[i]->getType());
-				tiles[i]->show(scr.getRenderer());
+				tiles[i]->show(game.getRenderer());
 			}
 
+		
 			for( int i = 0; i < coins.size(); ++i)
 			{
-				coins[i].show( scr.getRenderer() );
+				coins[i].show( game.getRenderer() );
 			}
+
+			for (int i = 0; i < 4; i++){
+				ghosts[i]->render(game.getRenderer());
+			}
+
 
 			bool pace = anim % 20 > 10; 
 
@@ -260,9 +272,9 @@ int main(int argc, char *argv[])
 					player.setPlayerTex(&playerTextures[1]);
 				}
 				if(player.CurrentDirection == MovementRight)
-					player.render(scr.getRenderer(), SDL_FLIP_NONE , 32, 32);
+					player.render(game.getRenderer(), SDL_FLIP_NONE , 32, 32);
 				if(player.CurrentDirection == MovementLeft)
-					player.render(scr.getRenderer(), SDL_FLIP_HORIZONTAL , 32, 32);
+					player.render(game.getRenderer(), SDL_FLIP_HORIZONTAL , 32, 32);
 			}
 
 			if(player.CurrentDirection == MovementDown || player.CurrentDirection == MovementUp)
@@ -276,14 +288,14 @@ int main(int argc, char *argv[])
 					player.setPlayerTex(&playerTextures[3]);
 				}
 				if(player.CurrentDirection == MovementUp)
-					player.render(scr.getRenderer(), SDL_FLIP_NONE , 32, 32);
+					player.render(game.getRenderer(), SDL_FLIP_NONE , 32, 32);
 				if(player.CurrentDirection == MovementDown)
-					player.render(scr.getRenderer(), SDL_FLIP_VERTICAL , 32, 32);
+					player.render(game.getRenderer(), SDL_FLIP_VERTICAL , 32, 32);
 			}
 
 			//SpriteSheetTexture.NewRender(player.playerBox.x, player.playerBox.y, currentClip, gRenderer);
-			scoreTex.render(0, 0, scr.getRenderer(), SDL_FLIP_NONE, 150, 40);
-			SDL_RenderPresent( scr.getRenderer() );
+			scoreTex.render(0, 0, game.getRenderer(), SDL_FLIP_NONE, 150, 40);
+			SDL_RenderPresent( game.getRenderer() );
 
 			float avgFPS = countedFrames / ( fpsTimer.getTicks() / 1000.f );
 			if( avgFPS > 2000000 )
@@ -293,9 +305,9 @@ int main(int argc, char *argv[])
 			++countedFrames;
 
 			int frameTicks = capTimer.getTicks();
-			if( frameTicks < SCREEN_TICK_PER_FRAME )
+			if( frameTicks < gameEEN_TICK_PER_FRAME )
 			{
-				SDL_Delay( SCREEN_TICK_PER_FRAME - frameTicks );
+				SDL_Delay( gameEEN_TICK_PER_FRAME - frameTicks );
 			}
 
 	}

@@ -72,6 +72,7 @@
     <ClCompile Include="LTexture.cpp" />
     <ClCompile Include="LTimer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mobs.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Screen.cpp" />
     <ClCompile Include="ScreenConsts.cpp" />
@@ -83,6 +84,7 @@
     <ClInclude Include="LMenu.h" />
     <ClInclude Include="LTexture.h" />
     <ClInclude Include="LTimer.h" />
+    <ClInclude Include="Mobs.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="ScreenConsts.h" />
